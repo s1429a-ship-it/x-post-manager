@@ -1,0 +1,30 @@
+Summary
+
+    index.html を1ファイル完結の「X投稿ネタ管理アプリ」として再生成しました。HTML/CSS/JavaScript を同一ファイルに含め、ネタ登録・投稿済みチェック・カテゴリー分け・検索・ローカル保存・スマホ対応を実装しています。
+
+    入力フォーム、検索欄、カテゴリー/投稿状態フィルター、投稿済み一括削除ボタン、集計カードを追加しました。
+
+    localStorage による保存、登録/編集/削除、投稿済み切り替え、検索/絞り込み、HTMLエスケープ処理を実装しました。
+
+    変更をコミットし、PR作成も完了しました。
+
+Testing
+
+    ✅ wc -l index.html
+
+    ✅ git diff -- index.html | head -40
+
+    ✅ git commit -m "Add single-file X post idea manager"
+
+以下、index.html の全文です。
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>X投稿ネタ管理アプリ</title>
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --card: #ffffff
