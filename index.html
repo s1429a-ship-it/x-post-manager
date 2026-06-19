@@ -1,23 +1,3 @@
-Summary
-
-    index.html を1ファイル完結の「X投稿ネタ管理アプリ」として再生成しました。HTML/CSS/JavaScript を同一ファイルに含め、ネタ登録・投稿済みチェック・カテゴリー分け・検索・ローカル保存・スマホ対応を実装しています。
-
-    入力フォーム、検索欄、カテゴリー/投稿状態フィルター、投稿済み一括削除ボタン、集計カードを追加しました。
-
-    localStorage による保存、登録/編集/削除、投稿済み切り替え、検索/絞り込み、HTMLエスケープ処理を実装しました。
-
-    変更をコミットし、PR作成も完了しました。
-
-Testing
-
-    ✅ wc -l index.html
-
-    ✅ git diff -- index.html | head -40
-
-    ✅ git commit -m "Add single-file X post idea manager"
-
-以下、index.html の全文です。
-
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -25,6 +5,85 @@ Testing
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>X投稿ネタ管理アプリ</title>
   <style>
-    :root {
-      --bg: #f5f7fb;
-      --card: #ffffff
+    *{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#f5f7fb;color:#111827}header{padding:22px 16px;background:#111827;color:#fff}header h1{margin:0 0 6px;font-size:22px}header p{margin:0;color:#cbd5e1;font-size:14px}.wrap{max-width:980px;margin:0 auto;padding:16px}.grid{display:grid;grid-template-columns:1fr;gap:14px}.card{background:#fff;border:1px solid #e5e7eb;border-radius:16px;padding:16px;box-shadow:0 8px 24px rgba(15,23,42,.06)}label{display:block;font-weight:700;font-size:13px;margin:10px 0 6px}input,select,textarea,button{font:inherit}input,select,textarea{width:100%;border:1px solid #d1d5db;border-radius:12px;padding:11px;background:#fff}textarea{min-height:110px;resize:vertical}.row{display:grid;grid-template-columns:1fr;gap:10px}.btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}button{border:0;border-radius:999px;padding:10px 14px;cursor:pointer;font-weight:700}.primary{background:#2563eb;color:#fff}.dark{background:#111827;color:#fff}.light{background:#e5e7eb;color:#111827}.danger{background:#fee2e2;color:#991b1b}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.stat{text-align:center;background:#f8fafc;border-radius:14px;padding:12px}.stat b{display:block;font-size:22px}.toolbar{display:grid;grid-template-columns:1fr;gap:10px}.item{border:1px solid #e5e7eb;border-radius:14px;padding:14px;margin-top:10px;background:#fff}.meta{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}.tag{font-size:12px;background:#eef2ff;color:#3730a3;border-radius:999px;padding:4px 8px}.done{background:#dcfce7;color:#166534}.draft{background:#fef3c7;color:#92400e}.content{white-space:pre-wrap;line-height:1.6}.empty{text-align:center;color:#6b7280;padding:24px}.small{font-size:12px;color:#6b7280}.item h3{margin:0 0 6px;font-size:16px}@media(min-width:760px){.grid{grid-template-columns:360px 1fr}.row{grid-template-columns:1fr 1fr}.toolbar{grid-template-columns:1.4fr .8fr .8fr}.wrap{padding:24px}header h1{font-size:28px}}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <h1>X投稿ネタ管理アプリ</h1>
+      <p>ネタ登録、カテゴリー分け、投稿済みチェック、検索、ローカル保存まで1画面で管理。</p>
+    </div>
+  </header>
+
+  <main class="wrap grid">
+    <section class="card">
+      <h2 id="formTitle">ネタを登録</h2>
+      <input type="hidden" id="editId" />
+      <label>タイトル</label>
+      <input id="title" placeholder="例：AIで作業時間を減らす話" />
+      <label>カテゴリー</label>
+      <input id="category" placeholder="例：AI活用 / note / 導線 / リプ" />
+      <label>投稿予定日</label>
+      <input id="date" type="date" />
+      <label>ネタ・投稿文</label>
+      <textarea id="body" placeholder="思いついたネタ、投稿文、フック、締めを書いておく"></textarea>
+      <div class="btns">
+        <button class="primary" onclick="saveIdea()">保存</button>
+        <button class="light" onclick="resetForm()">クリア</button>
+      </div>
+      <p class="small">保存データはこの端末のブラウザ内に残ります。別端末とは自動同期されません。</p>
+    </section>
+
+    <section class="card">
+      <div class="stats">
+        <div class="stat"><b id="total">0</b><span>総数</span></div>
+        <div class="stat"><b id="drafts">0</b><span>未投稿</span></div>
+        <div class="stat"><b id="posted">0</b><span>投稿済み</span></div>
+      </div>
+      <div class="toolbar" style="margin-top:14px">
+        <input id="search" placeholder="検索" oninput="render()" />
+        <select id="catFilter" onchange="render()"><option value="">全カテゴリー</option></select>
+        <select id="statusFilter" onchange="render()"><option value="">全ステータス</option><option value="draft">未投稿</option><option value="posted">投稿済み</option></select>
+      </div>
+      <div class="btns">
+        <button class="dark" onclick="copyAllDrafts()">未投稿をまとめてコピー</button>
+        <button class="danger" onclick="deletePosted()">投稿済みを削除</button>
+      </div>
+      <div id="list"></div>
+    </section>
+  </main>
+
+  <script>
+    const KEY='x_post_manager_ideas_v1';
+    let ideas=JSON.parse(localStorage.getItem(KEY)||'[]');
+    const $=id=>document.getElementById(id);
+    const esc=s=>String(s||'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+    function persist(){localStorage.setItem(KEY,JSON.stringify(ideas));}
+    function saveIdea(){
+      const title=$('title').value.trim(); const body=$('body').value.trim();
+      if(!title&&!body){alert('タイトルか本文を入力してください');return;}
+      const data={title:title||'無題',category:$('category').value.trim()||'未分類',date:$('date').value,body,posted:false,updated:new Date().toISOString()};
+      const id=$('editId').value;
+      if(id){ideas=ideas.map(x=>x.id===id?{...x,...data,posted:x.posted}:x);}else{ideas.unshift({id:crypto.randomUUID?crypto.randomUUID():String(Date.now()),created:new Date().toISOString(),...data});}
+      persist(); resetForm(); render();
+    }
+    function resetForm(){['editId','title','category','date','body'].forEach(id=>$(id).value='');$('formTitle').textContent='ネタを登録';}
+    function editIdea(id){const x=ideas.find(i=>i.id===id); if(!x)return; $('editId').value=x.id;$('title').value=x.title;$('category').value=x.category;$('date').value=x.date||'';$('body').value=x.body||'';$('formTitle').textContent='ネタを編集';scrollTo({top:0,behavior:'smooth'});}
+    function togglePosted(id){ideas=ideas.map(x=>x.id===id?{...x,posted:!x.posted}:x);persist();render();}
+    function deleteIdea(id){if(confirm('削除しますか？')){ideas=ideas.filter(x=>x.id!==id);persist();render();}}
+    async function copyText(text){await navigator.clipboard.writeText(text||'');alert('コピーしました');}
+    function copyAllDrafts(){const t=ideas.filter(x=>!x.posted).map(x=>`【${x.title}】\n${x.body}`).join('\n\n---\n\n'); if(!t){alert('未投稿がありません');return;} copyText(t);}
+    function deletePosted(){if(!confirm('投稿済みをまとめて削除しますか？'))return;ideas=ideas.filter(x=>!x.posted);persist();render();}
+    function render(){
+      const q=$('search').value.trim().toLowerCase(); const cf=$('catFilter').value; const sf=$('statusFilter').value;
+      const cats=[...new Set(ideas.map(x=>x.category||'未分類'))].sort();
+      $('catFilter').innerHTML='<option value="">全カテゴリー</option>'+cats.map(c=>`<option ${c===cf?'selected':''}>${esc(c)}</option>`).join('');
+      const filtered=ideas.filter(x=>(!q||(x.title+x.body+x.category).toLowerCase().includes(q))&&(!cf||x.category===cf)&&(!sf||(sf==='posted'?x.posted:!x.posted)));
+      $('total').textContent=ideas.length; $('posted').textContent=ideas.filter(x=>x.posted).length; $('drafts').textContent=ideas.filter(x=>!x.posted).length;
+      $('list').innerHTML=filtered.length?filtered.map(x=>`<article class="item"><h3>${esc(x.title)}</h3><div class="meta"><span class="tag">${esc(x.category)}</span><span class="tag ${x.posted?'done':'draft'}">${x.posted?'投稿済み':'未投稿'}</span>${x.date?`<span class="tag">予定日 ${esc(x.date)}</span>`:''}</div><div class="content">${esc(x.body)}</div><div class="btns"><button class="light" onclick="editIdea('${x.id}')">編集</button><button class="primary" onclick="togglePosted('${x.id}')">${x.posted?'未投稿に戻す':'投稿済みにする'}</button><button class="dark" onclick="copyText(ideas.find(i=>i.id==='${x.id}').body)">本文コピー</button><button class="danger" onclick="deleteIdea('${x.id}')">削除</button></div></article>`).join(''):'<div class="empty">まだネタがありません</div>';
+    }
+    render();
+  </script>
+</body>
+</html>
