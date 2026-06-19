@@ -1,89 +1,55 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>X投稿ネタ管理アプリ</title>
-  <style>
-    *{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#f5f7fb;color:#111827}header{padding:22px 16px;background:#111827;color:#fff}header h1{margin:0 0 6px;font-size:22px}header p{margin:0;color:#cbd5e1;font-size:14px}.wrap{max-width:980px;margin:0 auto;padding:16px}.grid{display:grid;grid-template-columns:1fr;gap:14px}.card{background:#fff;border:1px solid #e5e7eb;border-radius:16px;padding:16px;box-shadow:0 8px 24px rgba(15,23,42,.06)}label{display:block;font-weight:700;font-size:13px;margin:10px 0 6px}input,select,textarea,button{font:inherit}input,select,textarea{width:100%;border:1px solid #d1d5db;border-radius:12px;padding:11px;background:#fff}textarea{min-height:110px;resize:vertical}.row{display:grid;grid-template-columns:1fr;gap:10px}.btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}button{border:0;border-radius:999px;padding:10px 14px;cursor:pointer;font-weight:700}.primary{background:#2563eb;color:#fff}.dark{background:#111827;color:#fff}.light{background:#e5e7eb;color:#111827}.danger{background:#fee2e2;color:#991b1b}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.stat{text-align:center;background:#f8fafc;border-radius:14px;padding:12px}.stat b{display:block;font-size:22px}.toolbar{display:grid;grid-template-columns:1fr;gap:10px}.item{border:1px solid #e5e7eb;border-radius:14px;padding:14px;margin-top:10px;background:#fff}.meta{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}.tag{font-size:12px;background:#eef2ff;color:#3730a3;border-radius:999px;padding:4px 8px}.done{background:#dcfce7;color:#166534}.draft{background:#fef3c7;color:#92400e}.content{white-space:pre-wrap;line-height:1.6}.empty{text-align:center;color:#6b7280;padding:24px}.small{font-size:12px;color:#6b7280}.item h3{margin:0 0 6px;font-size:16px}@media(min-width:760px){.grid{grid-template-columns:360px 1fr}.row{grid-template-columns:1fr 1fr}.toolbar{grid-template-columns:1.4fr .8fr .8fr}.wrap{padding:24px}header h1{font-size:28px}}
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>X投稿作成アシスタント</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#f5f7fb;color:#111827}header{background:#111827;color:#fff;padding:22px 16px}header h1{margin:0 0 6px;font-size:24px}header p{margin:0;color:#cbd5e1}.wrap{max-width:1100px;margin:auto;padding:16px}.grid{display:grid;gap:14px}.card{background:#fff;border:1px solid #e5e7eb;border-radius:16px;padding:16px;box-shadow:0 8px 22px rgba(15,23,42,.06)}label{display:block;margin:12px 0 6px;font-weight:700;font-size:13px}input,textarea,select,button{font:inherit}input,textarea,select{width:100%;padding:11px;border:1px solid #d1d5db;border-radius:12px;background:#fff}textarea{min-height:92px;resize:vertical}.two{display:grid;gap:10px}.btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}button{border:0;border-radius:999px;padding:10px 14px;font-weight:700;cursor:pointer}.primary{background:#2563eb;color:#fff}.dark{background:#111827;color:#fff}.light{background:#e5e7eb;color:#111827}.pink{background:#fce7f3;color:#9d174d}.danger{background:#fee2e2;color:#991b1b}.prompt{white-space:pre-wrap;background:#0f172a;color:#e5e7eb;border-radius:14px;padding:14px;min-height:180px;line-height:1.6}.small{font-size:12px;color:#6b7280}.listItem{border:1px solid #e5e7eb;border-radius:14px;padding:12px;margin-top:10px}.tag{display:inline-block;font-size:12px;background:#eef2ff;color:#3730a3;border-radius:999px;padding:3px 8px;margin-right:6px}@media(min-width:860px){.grid{grid-template-columns:1fr 1fr}.two{grid-template-columns:1fr 1fr}header h1{font-size:30px}.wrap{padding:24px}}
+</style>
 </head>
 <body>
-  <header>
-    <div class="wrap">
-      <h1>X投稿ネタ管理アプリ</h1>
-      <p>ネタ登録、カテゴリー分け、投稿済みチェック、検索、ローカル保存まで1画面で管理。</p>
-    </div>
-  </header>
-
-  <main class="wrap grid">
-    <section class="card">
-      <h2 id="formTitle">ネタを登録</h2>
-      <input type="hidden" id="editId" />
-      <label>タイトル</label>
-      <input id="title" placeholder="例：AIで作業時間を減らす話" />
-      <label>カテゴリー</label>
-      <input id="category" placeholder="例：AI活用 / note / 導線 / リプ" />
-      <label>投稿予定日</label>
-      <input id="date" type="date" />
-      <label>ネタ・投稿文</label>
-      <textarea id="body" placeholder="思いついたネタ、投稿文、フック、締めを書いておく"></textarea>
-      <div class="btns">
-        <button class="primary" onclick="saveIdea()">保存</button>
-        <button class="light" onclick="resetForm()">クリア</button>
-      </div>
-      <p class="small">保存データはこの端末のブラウザ内に残ります。別端末とは自動同期されません。</p>
-    </section>
-
-    <section class="card">
-      <div class="stats">
-        <div class="stat"><b id="total">0</b><span>総数</span></div>
-        <div class="stat"><b id="drafts">0</b><span>未投稿</span></div>
-        <div class="stat"><b id="posted">0</b><span>投稿済み</span></div>
-      </div>
-      <div class="toolbar" style="margin-top:14px">
-        <input id="search" placeholder="検索" oninput="render()" />
-        <select id="catFilter" onchange="render()"><option value="">全カテゴリー</option></select>
-        <select id="statusFilter" onchange="render()"><option value="">全ステータス</option><option value="draft">未投稿</option><option value="posted">投稿済み</option></select>
-      </div>
-      <div class="btns">
-        <button class="dark" onclick="copyAllDrafts()">未投稿をまとめてコピー</button>
-        <button class="danger" onclick="deletePosted()">投稿済みを削除</button>
-      </div>
-      <div id="list"></div>
-    </section>
-  </main>
-
-  <script>
-    const KEY='x_post_manager_ideas_v1';
-    let ideas=JSON.parse(localStorage.getItem(KEY)||'[]');
-    const $=id=>document.getElementById(id);
-    const esc=s=>String(s||'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
-    function persist(){localStorage.setItem(KEY,JSON.stringify(ideas));}
-    function saveIdea(){
-      const title=$('title').value.trim(); const body=$('body').value.trim();
-      if(!title&&!body){alert('タイトルか本文を入力してください');return;}
-      const data={title:title||'無題',category:$('category').value.trim()||'未分類',date:$('date').value,body,posted:false,updated:new Date().toISOString()};
-      const id=$('editId').value;
-      if(id){ideas=ideas.map(x=>x.id===id?{...x,...data,posted:x.posted}:x);}else{ideas.unshift({id:crypto.randomUUID?crypto.randomUUID():String(Date.now()),created:new Date().toISOString(),...data});}
-      persist(); resetForm(); render();
-    }
-    function resetForm(){['editId','title','category','date','body'].forEach(id=>$(id).value='');$('formTitle').textContent='ネタを登録';}
-    function editIdea(id){const x=ideas.find(i=>i.id===id); if(!x)return; $('editId').value=x.id;$('title').value=x.title;$('category').value=x.category;$('date').value=x.date||'';$('body').value=x.body||'';$('formTitle').textContent='ネタを編集';scrollTo({top:0,behavior:'smooth'});}
-    function togglePosted(id){ideas=ideas.map(x=>x.id===id?{...x,posted:!x.posted}:x);persist();render();}
-    function deleteIdea(id){if(confirm('削除しますか？')){ideas=ideas.filter(x=>x.id!==id);persist();render();}}
-    async function copyText(text){await navigator.clipboard.writeText(text||'');alert('コピーしました');}
-    function copyAllDrafts(){const t=ideas.filter(x=>!x.posted).map(x=>`【${x.title}】\n${x.body}`).join('\n\n---\n\n'); if(!t){alert('未投稿がありません');return;} copyText(t);}
-    function deletePosted(){if(!confirm('投稿済みをまとめて削除しますか？'))return;ideas=ideas.filter(x=>!x.posted);persist();render();}
-    function render(){
-      const q=$('search').value.trim().toLowerCase(); const cf=$('catFilter').value; const sf=$('statusFilter').value;
-      const cats=[...new Set(ideas.map(x=>x.category||'未分類'))].sort();
-      $('catFilter').innerHTML='<option value="">全カテゴリー</option>'+cats.map(c=>`<option ${c===cf?'selected':''}>${esc(c)}</option>`).join('');
-      const filtered=ideas.filter(x=>(!q||(x.title+x.body+x.category).toLowerCase().includes(q))&&(!cf||x.category===cf)&&(!sf||(sf==='posted'?x.posted:!x.posted)));
-      $('total').textContent=ideas.length; $('posted').textContent=ideas.filter(x=>x.posted).length; $('drafts').textContent=ideas.filter(x=>!x.posted).length;
-      $('list').innerHTML=filtered.length?filtered.map(x=>`<article class="item"><h3>${esc(x.title)}</h3><div class="meta"><span class="tag">${esc(x.category)}</span><span class="tag ${x.posted?'done':'draft'}">${x.posted?'投稿済み':'未投稿'}</span>${x.date?`<span class="tag">予定日 ${esc(x.date)}</span>`:''}</div><div class="content">${esc(x.body)}</div><div class="btns"><button class="light" onclick="editIdea('${x.id}')">編集</button><button class="primary" onclick="togglePosted('${x.id}')">${x.posted?'未投稿に戻す':'投稿済みにする'}</button><button class="dark" onclick="copyText(ideas.find(i=>i.id==='${x.id}').body)">本文コピー</button><button class="danger" onclick="deleteIdea('${x.id}')">削除</button></div></article>`).join(''):'<div class="empty">まだネタがありません</div>';
-    }
-    render();
-  </script>
+<header><div class="wrap"><h1>X投稿作成アシスタント</h1><p>ネタから、根拠洗い出し・改善・リライト・完成投稿・LINE誘導まで進めるプロンプトを作ります。</p></div></header>
+<main class="wrap grid">
+<section class="card">
+<h2>入力</h2>
+<label>投稿ネタ</label><textarea id="idea" placeholder="例：AIを使い慣れていなくても収入を作る選択肢は増えている"></textarea>
+<div class="two"><div><label>ターゲット</label><input id="target" placeholder="例：AI副業に興味はあるが動けない初心者"></div><div><label>投稿目的</label><input id="purpose" placeholder="例：行動のハードルを下げてLINEへ誘導"></div></div>
+<label>伝えたい結論</label><textarea id="conclusion" placeholder="例：諦める前に、AIを使ってできる形を探した方がいい"></textarea>
+<label>根拠</label><textarea id="evidence" placeholder="事実、経験、読者の悩み、なぜそう言えるか"></textarea>
+<label>なぜ5回</label><textarea id="why5" placeholder="なぜ？を繰り返して掘った内容"></textarea>
+<label>問題点</label><textarea id="problem" placeholder="弱い部分、論理のズレ、見落とし"></textarea>
+<label>改善案</label><textarea id="improve" placeholder="どう直すか、別案、強めるポイント"></textarea>
+<label>リライト案</label><textarea id="rewrite" placeholder="厳しめ、カジュアル、短文など"></textarea>
+<label>完成投稿文</label><textarea id="finalPost" placeholder="最終的に投稿する文"></textarea>
+<label>LINE誘導文</label><textarea id="cta" placeholder="例：ひとりで悩むより、型を見ながら進めたい人はこちら"></textarea>
+<div class="btns"><button class="primary" onclick="saveData()">保存</button><button class="light" onclick="clearForm()">クリア</button></div>
+<p class="small">保存はこの端末のブラウザ内だけです。スマホとPCの自動同期はしません。</p>
+</section>
+<section class="card">
+<h2>プロンプト生成</h2>
+<select id="mode" onchange="makePrompt()">
+<option value="evidence">根拠洗い出し</option><option value="why">なぜ5回</option><option value="problem">問題点チェック</option><option value="score">4観点評価</option><option value="improve">改善案</option><option value="post">X投稿作成</option><option value="rewrite">リライト</option><option value="line">LINE誘導</option><option value="all">全部まとめて</option>
+</select>
+<div class="btns"><button class="dark" onclick="makePrompt()">プロンプト生成</button><button class="primary" onclick="copyPrompt()">コピー</button></div>
+<div id="prompt" class="prompt">ここにプロンプトが表示されます。</div>
+<div class="btns">
+<button class="light" onclick="quick('evidence')">根拠洗い出しプロンプトをコピー</button>
+<button class="light" onclick="quick('why')">なぜ5回プロンプトをコピー</button>
+<button class="light" onclick="quick('problem')">問題点チェックプロンプトをコピー</button>
+<button class="light" onclick="quick('score')">4観点評価プロンプトをコピー</button>
+<button class="light" onclick="quick('improve')">改善案プロンプトをコピー</button>
+<button class="light" onclick="quick('post')">X投稿作成プロンプトをコピー</button>
+<button class="light" onclick="quick('rewrite')">リライトプロンプトをコピー</button>
+<button class="pink" onclick="quick('line')">LINE誘導プロンプトをコピー</button>
+</div>
+<h2>保存メモ</h2><div id="savedList"></div>
+</section>
+</main>
+<script>
+const KEY='x_prompt_assistant_v1';const fields=['idea','target','purpose','conclusion','evidence','why5','problem','improve','rewrite','finalPost','cta'];const $=id=>document.getElementById(id);function val(id){return $(id).value.trim()||'未入力'}function payload(){return Object.fromEntries(fields.map(f=>[f,val(f)]))}function base(){const p=payload();return `あなたはX投稿の編集者です。感情論ではなく、売上・信頼・継続性・実行しやすさの4観点で現実的に判断してください。\n\n【投稿ネタ】\n${p.idea}\n\n【ターゲット】\n${p.target}\n\n【投稿目的】\n${p.purpose}\n\n【伝えたい結論】\n${p.conclusion}\n\n【根拠】\n${p.evidence}\n\n【なぜ5回】\n${p.why5}\n\n【問題点】\n${p.problem}\n\n【改善案】\n${p.improve}\n\n【リライト案】\n${p.rewrite}\n\n【完成投稿文】\n${p.finalPost}\n\n【LINE誘導文】\n${p.cta}`}
+const tasks={evidence:'この投稿ネタについて、主張を支える根拠を洗い出してください。経験・読者心理・市場性・行動変化の観点で、使える根拠と弱い根拠を分けてください。',why:'この投稿ネタに対して「なぜ？」を5回繰り返し、読者の本音・行動できない理由・刺さる論点まで深掘りしてください。',problem:'この投稿の問題点を厳しめに指摘してください。前提の甘さ、論理のズレ、読者が離脱する箇所、信頼を落とす表現を具体的に出してください。',score:'売上・信頼・継続性・実行しやすさの4観点で10点満点評価してください。点数の理由と改善優先順位も出してください。',improve:'この投稿を改善してください。誰向けか、結論、根拠、流れ、表現、誘導の順で直し、改善後の構成案も出してください。',post:'X投稿文を作成してください。140字版、280字版、少し厳しめ版、カジュアル版を出してください。誇大表現・根拠のない断定・薄い煽りは禁止です。',rewrite:'投稿文をリライトしてください。厳しめ、カジュアル、短文、保存されやすい形の4パターンで出してください。',line:'X投稿からLINEへ自然に誘導する文を作成してください。売り込み感を抑え、読者が次に進みたくなる流れにしてください。'};
+function makePrompt(){const m=$('mode').value;let text=m==='all'?Object.values(tasks).map((t,i)=>`【STEP${i+1}】\n${t}`).join('\n\n'):tasks[m];$('prompt').textContent=base()+`\n\n【依頼】\n${text}\n\n【出力形式】\n①全体像\n②問題点\n③理由\n④代替案\n⑤次の行動`;return $('prompt').textContent}async function copyPrompt(){await navigator.clipboard.writeText($('prompt').textContent);alert('コピーしました')}function quick(m){$('mode').value=m;makePrompt();copyPrompt()}function saveData(){localStorage.setItem(KEY,JSON.stringify(payload()));renderSaved();alert('保存しました')}function clearForm(){fields.forEach(f=>$(f).value='');$('prompt').textContent='ここにプロンプトが表示されます。'}function loadData(){const d=JSON.parse(localStorage.getItem(KEY)||'{}');fields.forEach(f=>{if(d[f]&&d[f]!=='未入力')$(f).value=d[f]});renderSaved()}function renderSaved(){const d=JSON.parse(localStorage.getItem(KEY)||'{}');$('savedList').innerHTML=d.idea?`<div class="listItem"><b>${d.idea}</b><div><span class="tag">${d.target||'ターゲット未入力'}</span><span class="tag">${d.purpose||'目的未入力'}</span></div></div>`:'<p class="small">保存データはまだありません。</p>'}loadData();fields.forEach(f=>$(f).addEventListener('input',()=>localStorage.setItem(KEY,JSON.stringify(payload()))));makePrompt();
+</script>
 </body>
 </html>
