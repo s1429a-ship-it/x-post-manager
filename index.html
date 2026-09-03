@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ショート動画図鑑 解説スレッド生成アプリ</title>
+  <style>
+    :root{--bg:#f3f6fb;--panel:#fff;--text:#111827;--muted:#64748b;--line:#dbe3ef;--primary:#2563eb;--primary-dark:#1d4ed8;--accent:#06b6d4;--danger:#ef4444;--shadow:0 18px 45px rgba(15,23,42,.08);--radius:18px}*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:linear-gradient(135deg,#eef6ff 0%,#f8fafc 42%,#eef2ff 100%);color:var(--text);line-height:1.6}.hero{padding:28px 16px 18px;background:#0f172a;color:#fff}.hero-inner{max-width:1120px;margin:0 auto}.hero h1{margin:0 0 8px;font-size:clamp(22px,5vw,38px);letter-spacing:.02em}.hero p{margin:0;color:#cbd5e1}.wrap{max-width:1120px;margin:0 auto;padding:18px 16px 40px}.layout{display:grid;grid-template-columns:1fr;gap:18px}.card{background:rgba(255,255,255,.92);border:1px solid rgba(219,227,239,.95);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px}.card h2{margin:0 0 6px;font-size:20px}.card .sub{margin:0 0 14px;color:var(--muted);font-size:13px}.field{margin-bottom:14px}label{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:0 0 7px;font-weight:800;font-size:14px}.hint{font-size:12px;color:var(--muted);font-weight:600}input,textarea,button{font:inherit}input,textarea{width:100%;border:1px solid var(--line);border-radius:14px;background:#fff;color:var(--text);padding:12px 13px;outline:none;transition:border-color .18s,box-shadow .18s,background .18s}input:focus,textarea:focus{border-color:var(--primary);box-shadow:0 0 0 4px rgba(37,99,235,.13)}textarea{min-height:88px;resize:vertical}.actions{display:grid;grid-template-columns:1fr;gap:10px}.prompt-grid{display:grid;grid-template-columns:1fr;gap:10px}.btn{border:0;border-radius:999px;padding:12px 15px;font-weight:800;cursor:pointer;transition:transform .12s,filter .12s,background .12s}.btn:active{transform:translateY(1px)}.copy{background:#e0f2fe;color:#075985;border:1px solid #bae6fd}.copy:hover{background:#bae6fd}.primary{background:var(--primary);color:#fff}.primary:hover{background:var(--primary-dark)}.clear{background:#fee2e2;color:#991b1b}.clear:hover{filter:brightness(.98)}.status{min-height:24px;margin:12px 0 0;color:#0f766e;font-weight:800;font-size:13px}.note{color:var(--muted);font-size:13px;margin:10px 0 0}.saved-list{margin-top:14px;display:grid;gap:10px}.saved-item{border:1px solid var(--line);background:#f8fafc;border-radius:14px;padding:12px}.saved-item strong{display:block;margin-bottom:4px}.saved-item small{color:var(--muted)}.steps{margin:0 0 16px;padding:0;list-style:none;display:grid;gap:6px}.steps li{font-size:13px;color:var(--muted);display:flex;gap:8px}.steps b{color:var(--text)}@media(min-width:760px){.wrap{padding:24px 20px 52px}.layout{grid-template-columns:minmax(0,1.25fr) minmax(320px,.75fr);align-items:start}.actions{grid-template-columns:1fr 1fr}.wide{grid-column:1/-1}}@media(max-width:420px){.card{padding:14px}.btn{border-radius:14px;padding:11px 12px}.hero{padding-top:22px}}
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="hero-inner">
+      <h1>ショート動画図鑑 解説スレッド生成アプリ</h1>
+      <p>バズった動画を題材に「なぜバズったか→本質→実装→ビジネス視点」の解説スレッドを組み立て、LINE誘導までのプロンプトをコピーできます。</p>
+    </div>
+  </header>
+
+  <main class="wrap layout">
+    <section class="card">
+      <h2>動画リサーチシート</h2>
+      <p class="sub">インスタ/TikTokで見つけたバズ動画の情報を入力してください。</p>
+      <div class="field"><label for="videoTopic">対象の動画 <span class="hint">必須</span></label><textarea id="videoTopic" placeholder="例：子どもの寝かしつけをコマ送りで見せるReels（概要・リンク）"></textarea></div>
+      <div class="field"><label for="hookReason">指が止まった理由（仮説）</label><textarea id="hookReason" placeholder="例：テキストなしでも音とテンポだけで状況が伝わる"></textarea></div>
+      <div class="field"><label for="genre">ジャンル・テーマ</label><input id="genre" placeholder="例：子育てあるある系ショート動画" /></div>
+      <div class="field"><label for="toolUsed">使用ツール・プロンプト（推測でも可）</label><textarea id="toolUsed" placeholder="例：CapCutのテンプレ、Suno風のBGM生成 など"></textarea></div>
+      <div class="field"><label for="costEffort">コスト・手間の目安</label><input id="costEffort" placeholder="例：撮影10分＋編集20分、無料ツールのみ" /></div>
+      <div class="field"><label for="targetAudience">読者ターゲット</label><input id="targetAudience" value="母親・働く女性・フリーランス" /></div>
+      <div class="field"><label for="ctaLink">LINE誘導リンク</label><input id="ctaLink" value="bit.ly/3ZQIB26" /></div>
+      <div class="actions">
+        <button class="btn primary" type="button" id="saveBtn">保存</button>
+        <button class="btn clear" type="button" id="clearBtn">クリア</button>
+      </div>
+      <p class="status" id="status" aria-live="polite"></p>
+    </section>
+
+    <aside class="card">
+      <h2>コピーボタン</h2>
+      <ul class="steps">
+        <li><b>①〜④</b> 各パートの解説を個別に生成</li>
+        <li><b>⑤</b> 4パートをXスレッド形式に統合</li>
+        <li><b>⑥</b> スレッドに続くLINE誘導文を生成</li>
+      </ul>
+      <div class="prompt-grid">
+        <button class="btn copy" type="button" data-prompt="whyBuzzed">①なぜバズったか分析プロンプトをコピー</button>
+        <button class="btn copy" type="button" data-prompt="essence">②バズの本質プロンプトをコピー</button>
+        <button class="btn copy" type="button" data-prompt="implementation">③実装面解説プロンプトをコピー</button>
+        <button class="btn copy" type="button" data-prompt="business">④ビジネス視点プロンプトをコピー</button>
+        <button class="btn copy" type="button" data-prompt="threadAssembly">⑤Xスレッド統合プロンプトをコピー</button>
+        <button class="btn copy" type="button" data-prompt="lineLead">⑥LINE誘導プロンプトをコピー</button>
+      </div>
+      <p class="note">入力内容はこのブラウザのlocalStorageに保存されます。</p>
+      <div class="saved-list" id="savedList"></div>
+    </aside>
+  </main>
+
+  <script>
+    const storageKey = 'shortVideoThreadGeneratorState';
+    const fields = ['videoTopic','hookReason','genre','toolUsed','costEffort','targetAudience','ctaLink'];
+    const labels = {videoTopic:'対象の動画',hookReason:'指が止まった理由（仮説）',genre:'ジャンル・テーマ',toolUsed:'使用ツール・プロンプト',costEffort:'コスト・手間の目安',targetAudience:'読者ターゲット',ctaLink:'LINE誘導リンク'};
+    const persona = '書き手は18年の接客経験と3人の子育て経験を持つ母親目線の発信者です。フォロワー数ではなく「なぜこの動画が刺さったのか」を分析し、母親・働く女性が「自分でもできそう」と思える信頼を積み上げることを目的としています。';
+    const $ = id => document.getElementById(id);
+    const value = id => $(id).value.trim();
+    const status = message => { $('status').textContent = message; window.clearTimeout(status.timer); status.timer = window.setTimeout(() => $('status').textContent = '', 2600); };
+    const snapshot = () => fields.reduce((data, id) => ({...data, [id]: value(id)}), {});
+    const lines = data => fields.map(id => `【${labels[id]}】\n${data[id] || '未入力'}`).join('\n\n');
+    const promptBuilders = {
+      whyBuzzed: data => `${persona}\n\n以下のバズ動画について、視聴者の「指が止まった理由」を分析してください。冒頭2秒の引き、構成の意外性、感情の動きの観点で具体的に言語化してください。\n\n${lines(data)}`,
+      essence: data => `${persona}\n\n以下のバズ動画について、バズの本質を次の3観点で解説してください。\n・言語ゼロ設計（テキストなし、音や映像だけで伝わる工夫）\n・感情を代弁する構造（映像が先に「気持ち」を言っているか）\n・完視聴率を高める工夫（離脱させない仕掛け）\n\n${lines(data)}`,
+      implementation: data => `${persona}\n\n以下のバズ動画の実装面を解説してください。使ったと思われるツールやプロンプト、制作にかかるコストと手間、実装のコツを、母親・働く女性でも真似しやすい粒度で整理してください。\n\n${lines(data)}`,
+      business: data => `${persona}\n\n以下のバズ動画をビジネス視点で解説してください。自分が同じ手法で発信するなら何を優先するか、実装のハウツー、そして時間の制約がある母親・働く女性が無理なく実現する方法を提案してください。\n\n${lines(data)}`,
+      threadAssembly: data => `${persona}\n\n以下の情報をもとに、X（旧Twitter）向けの解説スレッドを作成してください。構成は次の4ブロックで、各ブロックは短い文と改行を使い、スマホで読みやすくしてください。\n\n① なぜこの動画がバズったのか（指が止まった理由の分析）\n② バズの本質（言語ゼロ設計／感情を代弁する構造／完視聴率を高める工夫）\n③ 実装面での解説（使ったツール・プロンプト／コストと手間／実装のコツ）\n④ ビジネス視点（優先すべきこと／実装ハウツー／時間制約のある人でもできる方法）\n\n${lines(data)}`,
+      lineLead: data => `${persona}\n\n以下のX解説スレッドの最後に続けて使えるLINE誘導文を作成してください。売り込み感を抑え、「スキマ時間で学べる環境」としてまるお塾への登録を自然に促す内容にし、最後にリンクを入れてください。\n\n${lines(data)}\n\n【LINE誘導リンク】\n${data.ctaLink || '未入力'}`
+    };
+    function save(){const data = {...snapshot(), savedAt:new Date().toISOString()}; localStorage.setItem(storageKey, JSON.stringify(data)); renderSaved(data); status('保存しました');}
+    function load(){try{const data = JSON.parse(localStorage.getItem(storageKey) || '{}'); fields.forEach(id => { if(data[id]) $(id).value = data[id]; }); renderSaved(data);}catch(e){renderSaved({});}}
+    function clearAll(){fields.forEach(id => $(id).value = ''); $('targetAudience').value = '母親・働く女性・フリーランス'; $('ctaLink').value = 'bit.ly/3ZQIB26'; localStorage.removeItem(storageKey); renderSaved({}); status('クリアしました');}
+    async function copyPrompt(type){const text = promptBuilders[type](snapshot()); try{await navigator.clipboard.writeText(text); status('プロンプトをコピーしました');}catch(e){const area = document.createElement('textarea'); area.value = text; document.body.appendChild(area); area.select(); document.execCommand('copy'); area.remove(); status('プロンプトをコピーしました');}}
+    function renderSaved(data){const box = $('savedList'); if(!data || !data.savedAt){box.innerHTML = '<div class="saved-item"><strong>未保存</strong><small>保存ボタンを押すと現在の入力内容が残ります。</small></div>'; return;} const date = new Date(data.savedAt).toLocaleString('ja-JP'); box.innerHTML = `<div class="saved-item"><strong>${data.videoTopic || '無題の動画リサーチ'}</strong><small>最終保存：${date}</small></div>`;}
+    $('saveBtn').addEventListener('click', save);
+    $('clearBtn').addEventListener('click', clearAll);
+    document.querySelectorAll('[data-prompt]').forEach(btn => btn.addEventListener('click', () => copyPrompt(btn.dataset.prompt)));
+    fields.forEach(id => $(id).addEventListener('input', () => localStorage.setItem(storageKey, JSON.stringify({...snapshot(), savedAt:new Date().toISOString()}))));
+    load();
+  </script>
+</body>
+</html>
